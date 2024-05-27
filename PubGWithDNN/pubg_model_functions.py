@@ -64,30 +64,30 @@ def model_train(X, y, nodes, activation, batchSize, epoch):
     return ann
 
 
-def createModel(X_train):
-    model = Sequential()
-    model.add(Dense(512, kernel_initializer='he_normal', input_dim=X_train.shape[1], activation='relu'))
-    model.add(BatchNormalization())
-    model.add(Dropout(0.2))
+def createModel(dim):
+    dnn = Sequential()
+    dnn.add(Dense(512, kernel_initializer='he_normal', input_dim=dim, activation='relu'))
+    dnn.add(BatchNormalization())
+    dnn.add(Dropout(0.2))
 
-    model.add(Dense(256, kernel_initializer='he_normal'))
-    model.add(PReLU(alpha_initializer='zeros', alpha_regularizer=None, alpha_constraint=None, shared_axes=None))
-    model.add(BatchNormalization())
-    model.add(Dropout(0.2))
+    dnn.add(Dense(256, kernel_initializer='he_normal'))
+    dnn.add(PReLU(alpha_initializer='zeros', alpha_regularizer=None, alpha_constraint=None, shared_axes=None))
+    dnn.add(BatchNormalization())
+    dnn.add(Dropout(0.2))
 
-    model.add(Dense(128, kernel_initializer='he_normal'))
-    model.add(PReLU(alpha_initializer='zeros', alpha_regularizer=None, alpha_constraint=None, shared_axes=None))
-    model.add(BatchNormalization())
-    model.add(Dropout(0.1))
+    dnn.add(Dense(128, kernel_initializer='he_normal'))
+    dnn.add(PReLU(alpha_initializer='zeros', alpha_regularizer=None, alpha_constraint=None, shared_axes=None))
+    dnn.add(BatchNormalization())
+    dnn.add(Dropout(0.1))
 
-    model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
+    dnn.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
 
     optimizer = optimizers.Adam(learning_rate=0.005)
-    model.compile(optimizer=optimizer, loss='mse', metrics=['mae'])
+    dnn.compile(optimizer=optimizer, loss='mse', metrics=['mae'])
 
-    return model
+    return dnn
 
 
-X = np.array([[1, 2, 3, 4, 5], [1, 2, 3, 4, 5]])
-model = createModel(X)
-print(type(model))
+#X = np.array([[1, 2, 3, 4, 5], [1, 2, 3, 4, 5]])
+#model = createModel(X)
+#print(type(model))
