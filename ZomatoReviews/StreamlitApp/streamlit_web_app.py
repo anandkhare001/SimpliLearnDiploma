@@ -1,22 +1,34 @@
 import streamlit as st
 import joblib as jb
 import numpy as np
-import config
-from data import load_pipeline
-import predict
+import NLP
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+acknowledge = ""
 
 
-model = load_pipeline(config.MODEL_NAME)
+def predict(review):
+    review = NLP.normalise_text(review)
+    review = NLP.tokenize_text(review)
+    review = NLP.del_stop(review)
+    review = NLP.clean_text(review)
+    Tf = TfidfVectorizer(max_features=10)
+    review = Tf.fit_transform(review)
+
+    model = jb.load("ZomatoReviewModel.pkl")
+    rating = model.best_estimator_.predict(review)
+    return rating
 
 
 def main():
+    global acknowledge
     st.title("Welcome to  Zomato Reviews Section")
     st.header("Kindly submit your valuable feedback")
-    review = st.text_input("Share your feedback", height=300)
+    review = st.text_input("Share your feedback")
     submit = st.button("Submit Review")
 
     if submit:
-        rating = predict.predict_review(review)
+        rating = predict(review)
 
         if 3 < rating < 4.5:
             acknowledge = f"""
@@ -36,8 +48,11 @@ def main():
                               We're sorry that you had inconvenience with our services.
                               We'll take this feedback as an opportunity for improvement and strive  to better.
                               """
-        st.write(acknowledge, height=100)
+        else:
+            acknowledge = ""
+
+        st.success(acknowledge)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
