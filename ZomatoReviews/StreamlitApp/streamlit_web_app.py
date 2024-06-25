@@ -28,7 +28,7 @@ def main():
     submit = st.button("Submit Review")
 
     if submit:
-        rating = 4 # predict(review)
+        rating = predict(review)
 
         if 3 < rating < 4.5:
             acknowledge = f"""
