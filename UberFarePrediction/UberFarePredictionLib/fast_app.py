@@ -14,10 +14,10 @@ model = load_pipeline(config.MODEL_NAME)
 
 # Perform parsing of inputs features
 class UberFare(BaseModel):
-    pickup_lattitude: float
     pickup_longitude: float
-    dropoff_lattitude: float
+    pickup_latitude: float
     dropoff_longitude: float
+    dropoff_latitude: float
     passenger_count: float
     day: float
     hour: float
@@ -32,24 +32,23 @@ def index():
 
 
 # defining the function which will make the prediction using the data which the user inputs
-@app.post('/predict')
+@app.post('/prediction')
 def predict_fare(ride_details: UberFare):
-    data = ride_details.model_dump()
-    pickup_lattitude = data['pickup_lattitude']
-    pickup_longitude = data['pickup_longitude']
-    dropoff_lattitude = data['dropoff_lattitude']
-    dropoff_longitude = data['dropoff_longitude']
-    passenger_count = data['passenger_count']
-    day = data['day']
-    hour = data['hour']
-    weekday = data['weekday']
-    month = data['month']
-    year = data['year']
+    inputData = ride_details.model_dump()
 
     # Make prediction
-    prediction = model.predict([[pickup_longitude, pickup_lattitude, dropoff_longitude, dropoff_lattitude, passenger_count, day, hour, weekday, month, year]])
+    prediction = model.predict([[inputData['pickup_longitude'],
+                                 inputData['pickup_latitude'],
+                                 inputData['dropoff_longitude'],
+                                 inputData['dropoff_latitude'],
+                                 inputData['passenger_count'],
+                                 inputData['day'],
+                                 inputData['hour'],
+                                 inputData['weekday'],
+                                 inputData['month'],
+                                 inputData['year']]])
 
-    return {'Ride fare predicted': prediction}
+    return {'Ride fare predicted': str(prediction)}
 
 
 if __name__ == '__main__':
