@@ -72,4 +72,5 @@ if __name__ == '__main__':
     #data_df = preprocess(config.TRAIN_FILE)
     print(data_df.head())
     print(type(data_df))
+    print(data_df.columns)
 
